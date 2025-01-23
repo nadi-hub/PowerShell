@@ -6,23 +6,28 @@
 #>
 
 
-function Write-CustomLog {
-   param (
-       [string]$Message,
-       [ValidateSet('Info', 'Error')]
-       [string]$Type,
-       [string]$LogPath = ".\exercise.txt"
-   ) 
 
-        $zeitstempel = Get-Date -Format "dd.MM.yyyy HH:mm"
-        $logEntry = "$Type - $zeitstempel - $Message"
-        Add-Content $LogPath $logEntry
-   
+
+# Übung 6a: Funktion zum Schreiben eines Logfiles
+function Write-Log {
+    param (
+        [string]$Message,
+        [ValidateSet("Info", "Error")]
+        [string]$Type
+    )
+    
+    $LogFile = "$env:USERPROFILE\Übung_Logfile.txt"  # Logfile im Benutzerverzeichnis
+    $Timestamp = Get-Date -Format "dd.MM.yyyy HH:mm"
+    $LogEntry = "$Timestamp - $Type - $Message"
+    
+    Add-Content -Path $LogFile -Value $LogEntry
 }
 
-     Write-CustomLog "Das ist die Lognachricht" Info
 
-     $tempFiles = Get-ChildItem -Path $env:TEMP
-     foreach ($tempFile in $tempFiles) {
-        Write-CustomLog "Datei: $($tempFile.Name)" "Info"
-     }
+6b)
+$TempFiles = Get-ChildItem -Path $env:TEMP | Select-Object -ExpandProperty Name
+
+foreach ($File in $TempFiles) {
+    Write-Log "$File"
+}
+Get-Content "$env:USERPROFILE\Übung_Logfile.txt"
